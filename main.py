@@ -40,11 +40,8 @@ for y in common_files:
         if not df[df[i+'Match?'] == 'False'].index.values.tolist():
             continue
         else:
-            # print("Column_Name-"+i)
-            # print(df[df[i + 'Match?'] == 'False'].index.values.tolist())
             value1 = value1+','+"Column_Name-"+i+','
             value1 = value1+''.join(str(df[df[i + 'Match?'] == 'False'].index.values.tolist())).replace(",",";")
-            # print (value1)
     list1.append(value1)
 #printing the report
 html_head = "<html><head><H1>CSV Comparison</head><body><table border=1 ><tr><td>File Name</td><td>Failure Result</td></tr>"
