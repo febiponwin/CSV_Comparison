@@ -1,9 +1,26 @@
 import pandas as pd
 import numpy as np
 import os
+import tkinter as tk
+from tkinter import simpledialog
+import sys
 
-folder1 = 'D:\\office_prd\\2020C'
-folder2= 'D:\\office_prd\\2020D'
+ROOT = tk.Tk()
+ROOT.withdraw()
+USER_1 = simpledialog.askstring(title="CSV Comparison",
+                                  prompt="First folder location")
+USER_2 = simpledialog.askstring(title="CSV Comparison",
+                                  prompt="Second folder location")
+if USER_1 == "":
+    USER_1 = None
+if USER_2 == "":
+    USER_2 = None
+
+if (USER_1 is None) or (USER_2 is None):
+    sys.exit("No input is given")
+
+folder1 = USER_1
+folder2 = USER_2
 file1 = os.listdir(folder1)
 file2 = os.listdir(folder2)
 
