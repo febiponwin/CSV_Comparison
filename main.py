@@ -4,6 +4,7 @@ import os
 import tkinter as tk
 from tkinter import simpledialog
 import sys
+import webbrowser
 
 ROOT = tk.Tk()
 ROOT.withdraw()
@@ -75,3 +76,6 @@ html_end = "</table></body></html>"
 Html_file= open("report.html","w")
 Html_file.write(html_head+html_str+html_end)
 Html_file.close()
+
+url = 'file:///'+os.getcwd()+'/report.html'
+webbrowser.open(url, new=2)
