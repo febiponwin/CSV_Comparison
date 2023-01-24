@@ -79,3 +79,28 @@ Html_file.close()
 
 url = 'file:///'+os.getcwd()+'/report.html'
 webbrowser.open(url, new=2)
+
+
+import struct
+
+def split_epoch(epoch):
+    # Divide the total number of seconds in an epoch by 4
+    # and assign the remainder to the final value
+    val1 = int(epoch / (256**3))
+    val2 = int((epoch % (256**3)) / (256**2))
+    val3 = int(((epoch % (256**3)) % (256**2)) / 256)
+    val4 = int(((epoch % (256**3)) % (256**2)) % 256)
+    return [val1, val2, val3, val4]
+
+def merge_epoch(values):
+    # Concatenate the values and convert to an integer
+    epoch = (values[0] * (256**3)) + (values[1] * (256**2)) + (values[2] * 256) + values[3]
+    return epoch
+
+# Test the functions
+epoch = 1674566372
+splitted = split_epoch(epoch)
+print("Splitted epoch: ", splitted)
+merged = merge_epoch(splitted)
+print("Merged epoch: ", merged)
+
