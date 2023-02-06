@@ -81,26 +81,34 @@ url = 'file:///'+os.getcwd()+'/report.html'
 webbrowser.open(url, new=2)
 
 
-import struct
+import tkinter as tk
+from datetime import datetime
 
-def split_epoch(epoch):
-    # Divide the total number of seconds in an epoch by 4
-    # and assign the remainder to the final value
-    val1 = int(epoch / (256**3))
-    val2 = int((epoch % (256**3)) / (256**2))
-    val3 = int(((epoch % (256**3)) % (256**2)) / 256)
-    val4 = int(((epoch % (256**3)) % (256**2)) % 256)
-    return [val1, val2, val3, val4]
+def update_range(val):
+    # Get the selected range
+    start = times[int(val.get())]
+    end = times[int(val.get() + slider_length.get())]
+    print(f"Selected range: {start} - {end}")
 
-def merge_epoch(values):
-    # Concatenate the values and convert to an integer
-    epoch = (values[0] * (256**3)) + (values[1] * (256**2)) + (values[2] * 256) + values[3]
-    return epoch
+# Load the time values from the file into a list
+with open("times.txt", "r") as f:
+    times = [datetime.strptime(line.strip(), '%Y-%m-%dT%H:%M:%S') for line in f.readlines()]
 
-# Test the functions
-epoch = 1674566372
-splitted = split_epoch(epoch)
-print("Splitted epoch: ", splitted)
-merged = merge_epoch(splitted)
-print("Merged epoch: ", merged)
+root = tk.Tk()
+root.title("Time Slider")
+
+# Create a variable to store the length of the range
+slider_length = tk.IntVar()
+slider_length.set(1)
+
+# Create the time slider
+time_slider = tk.Scale(root, from_=0, to=len(times) - 1, orient="horizontal", label="Time", command=update_range)
+time_slider.pack()
+
+# Create a scale to select the range length
+length_slider = tk.Scale(root, from_=1, to=len(times), orient="horizontal", label="Range Length", variable=slider_length)
+length_slider.pack()
+
+root.mainloop()
+
 
