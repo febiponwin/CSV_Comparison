@@ -90,6 +90,10 @@ def update_range(val):
     end = times[int(val.get() + slider_length.get())]
     print(f"Selected range: {start} - {end}")
 
+def update_scale_label(val):
+    value = int(val.get())
+    label.config(text=times[value].strftime('%Y-%m-%d %H:%M:%S'))
+
 # Load the time values from the file into a list
 with open("times.txt", "r") as f:
     times = [datetime.strptime(line.strip(), '%Y-%m-%dT%H:%M:%S') for line in f.readlines()]
@@ -102,13 +106,18 @@ slider_length = tk.IntVar()
 slider_length.set(1)
 
 # Create the time slider
-time_slider = tk.Scale(root, from_=0, to=len(times) - 1, orient="horizontal", label="Time", command=update_range)
+time_slider = tk.Scale(root, from_=0, to=len(times) - 1, orient="horizontal", label="Time", command=update_range, variable=tk.DoubleVar(), showvalue=False)
 time_slider.pack()
+
+# Create a label to display the time value
+label = tk.Label(root, text=times[0].strftime('%Y-%m-%d %H:%M:%S'))
+label.pack()
+
+# Bind the label to update when the slider value changes
+time_slider.bind("<B2-Motion>", lambda event: update_scale_label(time_slider.cget("variable")))
 
 # Create a scale to select the range length
 length_slider = tk.Scale(root, from_=1, to=len(times), orient="horizontal", label="Range Length", variable=slider_length)
 length_slider.pack()
 
 root.mainloop()
-
-
