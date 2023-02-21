@@ -1,0 +1,37 @@
+const fs = require('fs');
+const gherkin = require('gherkin');
+const { createObjectCsvWriter } = require('csv-writer');
+
+// Read the feature file
+const featureFile = fs.readFileSync('path/to/feature/file.feature', 'utf-8');
+
+// Parse the feature file
+const parser = new gherkin.Parser();
+const ast = parser.parse(featureFile);
+
+// Extract the scenario outlines and examples
+const scenarios = [];
+ast.feature.children.forEach(child => {
+  if (child.scenarioOutline) {
+    const outline = child.scenarioOutline;
+    outline.examples.forEach(example => {
+      const header = example.tableHeader.cells.map(cell => cell.value);
+      example.tableBody.forEach(row => {
+        const values = row.cells.map(cell => cell.value);
+        scenarios.push({ scenario: outline.name, header, values });
+      });
+    });
+  }
+});
+
+// Write the scenarios to a CSV file
+const csvWriter = createObjectCsvWriter({
+  path: 'path/to/csv/file.csv',
+  header: [
+    { id: 'scenario', title: 'Scenario' },
+    { id: 'header', title: 'Header' },
+    { id: 'values', title: 'Values' }
+  ]
+});
+csvWriter.writeRecords(scenarios)
+  .then(() => console.log('CSV file written successfully'));
